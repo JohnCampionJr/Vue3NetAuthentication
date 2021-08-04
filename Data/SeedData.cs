@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MongoFramework.AspNetCore.Identity;
-using System;
-using System.Linq;
 
-namespace Blazor5Auth.Server.Data
+namespace Vue3Net6Authentication.Data
 {
     public static class SeedData
     {

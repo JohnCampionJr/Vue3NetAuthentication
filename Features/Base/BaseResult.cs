@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Reinforced.Typings.Attributes;
-
-namespace Features.Base
+﻿namespace Features.Base
 {
     [TsInterface]
     public class BaseResult

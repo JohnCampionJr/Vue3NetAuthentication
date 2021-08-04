@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Features.Base;
-using MediatR;
-
-namespace Features.Person
+﻿namespace Features.Person
 {
     [Route("api/[controller]/")]
     public class PersonController : MediatrControllerBase

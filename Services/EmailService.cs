@@ -1,14 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
-using Microsoft.Extensions.Hosting;
-using System.Runtime.CompilerServices;
 using MimeKit.Utils;
 
-namespace Blazor5Auth.Server.Services
+namespace Vue3Net6Authentication.Services
 {
     public class SmtpSettings
     {

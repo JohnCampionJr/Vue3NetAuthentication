@@ -1,6 +1,4 @@
-using System;
-
-namespace AspNetCoreVueStarter.Models
+namespace Vue3Net6Authentication.Models
 {
     public class WeatherForecast
     {

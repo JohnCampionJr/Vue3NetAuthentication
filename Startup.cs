@@ -1,24 +1,9 @@
-using Blazor5Auth.Server.Data;
-using Blazor5Auth.Server.Models;
-using Blazor5Auth.Server.Services;
-using Blazor5Auth.Shared;
-using Features.Account;
-using Features.Base;
-using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MongoFramework.AspNetCore.Identity;
-using System.Text;
-using System.Text.Json;
-using Vue3Net6Authentication.Extensions;
 
 namespace Vue3Net6Authentication
 {

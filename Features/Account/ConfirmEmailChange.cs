@@ -1,16 +1,4 @@
-﻿using System.Security.Claims;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
-using Vue3Net6Authentication.Extensions;
-using Blazor5Auth.Server.Models;
-using Features.Base;
-using FluentValidation;
-using MediatR;
-
-namespace Features.Account
+﻿namespace Features.Account
 {
     public class ConfirmEmailChange
     {

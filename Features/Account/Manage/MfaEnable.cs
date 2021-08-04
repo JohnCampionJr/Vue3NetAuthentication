@@ -1,17 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Vue3Net6Authentication.Extensions;
-using Blazor5Auth.Server.Models;
-using Features.Base;
-using FluentValidation;
-using MediatR;
-using QRCoder;
-using Reinforced.Typings.Attributes;
+﻿using QRCoder;
 
 namespace Features.Account.Manage
 {

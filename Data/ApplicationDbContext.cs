@@ -1,9 +1,4 @@
-﻿using System;
-using Blazor5Auth.Server.Models;
-using MongoFramework;
-using MongoFramework.AspNetCore.Identity;
-
-namespace Blazor5Auth.Server.Data
+﻿namespace Vue3Net6Authentication.Data
 {
     public class ApplicationDbContext : MongoIdentityDbContext<ApplicationUser, MongoIdentityRole>
     {

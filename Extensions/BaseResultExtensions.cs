@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Features.Base;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Vue3Net6Authentication.Extensions
 {

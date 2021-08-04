@@ -1,10 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Features.Base;
-using MediatR;
-
-namespace Features.Account.Manage
+﻿namespace Features.Account.Manage
 {
     [Authorize]
     [Route("api/account/[controller]/[action]")]

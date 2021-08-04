@@ -1,6 +1,4 @@
-﻿using MongoFramework.AspNetCore.Identity;
-
-namespace Blazor5Auth.Server.Models
+﻿namespace Vue3Net6Authentication.Models
 {
     public class ApplicationUser : MongoIdentityUser
     {

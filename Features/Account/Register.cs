@@ -1,20 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
-using Vue3Net6Authentication.Extensions;
-using Blazor5Auth.Server.Models;
-using Blazor5Auth.Server.Services;
-using Features.Base;
-using FluentValidation;
-using MediatR;
-
-namespace Features.Account
+﻿namespace Features.Account
 {
     public class Register
     {

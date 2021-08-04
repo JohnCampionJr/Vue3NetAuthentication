@@ -1,8 +1,4 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Features.Base
+﻿namespace Features.Base
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

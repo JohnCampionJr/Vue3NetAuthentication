@@ -1,15 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Vue3Net6Authentication.Extensions;
-using Blazor5Auth.Server.Models;
-using Features.Base;
-using FluentValidation;
-using MediatR;
-using Reinforced.Typings.Attributes;
-
-namespace Features.Account.Manage
+﻿namespace Features.Account.Manage
 {
     public class UserProfile
     {

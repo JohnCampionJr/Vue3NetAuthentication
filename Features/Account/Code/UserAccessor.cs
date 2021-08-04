@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-
-namespace Features.Account
+﻿namespace Features.Account
 {
     public interface IUserAccessor
     {

@@ -1,11 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Features.Base;
-using FluentValidation;
-using MediatR;
-using Vue3Net6Authentication.Extensions;
-
-namespace Features.Person
+﻿namespace Features.Person
 {
     public class CreatePerson
     {

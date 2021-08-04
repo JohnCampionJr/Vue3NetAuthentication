@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using Features.Base;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Features.Account
+﻿namespace Features.Account
 {
     public class AccountController : MediatrControllerBase
     {
