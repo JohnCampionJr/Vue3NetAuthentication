@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@antfu",
+    "vue-global-api"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "never"]
+  }
+}
