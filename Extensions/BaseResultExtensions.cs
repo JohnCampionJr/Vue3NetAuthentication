@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Features.Base;
 
-namespace Vue3Net6Validation
+namespace Vue3Net6Authentication.Extensions
 {
     public static class BaseResultExtensions
     {
-        public static T Success<T>(this T result, string message = null) where T : BaseResult
+        public static T Succeeded<T>(this T result, string message = null) where T : BaseResult
         {
             result.IsSuccessful = true;
             if (message != null)
@@ -13,7 +15,7 @@ namespace Vue3Net6Validation
             }
             return result;
         }
-        
+
         public static T Failed<T>(this T result, string message = null) where T : BaseResult
         {
             result.IsSuccessful = false;
@@ -24,12 +26,29 @@ namespace Vue3Net6Validation
             return result;
         }
 
-        public static T Errors<T>(this T result, ModelStateDictionary modelState) where T : BaseResult
+        public static T WithErrors<T>(this T result, ModelStateDictionary modelState) where T : BaseResult
         {
             result.IsSuccessful = false;
             result.Errors = modelState.ToDictionary();
             return result;
         }
-        
+
+        public static T WithErrors<T>(this T result, IEnumerable<string> errors) where T : BaseResult
+        {
+            result.IsSuccessful = false;
+            foreach (var error in errors)
+            {
+                result.Errors.Add("", error);
+            }
+            return result;
+        }
+
+        public static T WithError<T>(this T result, string field, string error) where T : BaseResult
+        {
+            result.IsSuccessful = false;
+            result.Errors.Add(new KeyValuePair<string, string>(field, error));
+            return result;
+        }
+
     }
 }

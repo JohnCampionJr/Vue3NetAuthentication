@@ -18,13 +18,20 @@ export default defineConfig({
     Vue(),
 
     // https://github.com/hannoeru/vite-plugin-pages
-    Pages(),
+    Pages({
+      pagesDir: [
+        { dir: 'src/pages', baseRoute: '' },
+        { dir: 'src/areas/account/pages', baseRoute: 'account' }
+      ]
+    }),
 
     // https://github.com/JohnCampionJr/vite-plugin-vue-layouts
     Layouts(),
 
     // https://github.com/antfu/vite-plugin-components
     ViteComponents({
+
+      dirs: ['src/components', 'src/areas/account/components'],
 
       // generate `components.d.ts` for ts support with Volar
       globalComponentsDeclaration: true,
@@ -61,7 +68,14 @@ export default defineConfig({
     include: [
       'vue',
       'vue-router',
-      '@vueuse/core'
+      '@vueuse/core',
+      'vuex',
+      'vuex-module-decorators',
+      'axios',
+      'date-fns',
+      'vee-validate',
+      'yup',
+      'jwt-decode'
     ],
     exclude: [
       'vue-demi'

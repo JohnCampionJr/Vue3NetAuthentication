@@ -6,7 +6,7 @@
     <div v-if="loading">
       <p><em>Loading...</em></p>
     </div>
-    <table v-else class="w-1/2 mx-auto">
+    <table v-else class="w-full">
       <thead>
         <tr class="text-left border-t border-b-2">
           <th class="w-1/4 p-3">Date</th>
@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, i) in forecasts" :key="i" class=" text-left border-t">
+        <tr v-for="(item, i) in forecasts" :key="i" class="border-t">
           <td class="p-3">{{ date(item.date) }}</td>
           <td class="p-3">
             <span :class="['p-2', 'rounded-pill', 'text-white', getColor(item.temperatureC)]">
@@ -71,7 +71,7 @@ const date = (date: Date | undefined): string => {
 
 const fetchWeatherForecasts = (): void => {
   try {
-    axios.get<Forecast[]>('/weatherforecast').then((res) => {
+    axios.get<Forecast[]>('api/WeatherForecast').then((res) => {
       forecasts.value = res.data
       loading.value = false
     })

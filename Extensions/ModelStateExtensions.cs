@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Vue3Net6Validation
+namespace Vue3Net6Authentication.Extensions
 {
     public static class ModelStateExtensions
     {

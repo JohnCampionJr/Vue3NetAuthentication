@@ -1,8 +1,8 @@
 <template>
   <div>
     <p class="my-3">
-      Current count:
-      <strong>{{ counter.count }}</strong>
+      Current count (Vuex):
+      <strong>{{ currentCount }}</strong>
     </p>
     <button class="mr-2 btn btn-primary" @click.prevent="increment">Increment</button>
     <button class="btn btn-secondary" @click.prevent="reset">Reset</button>
@@ -10,15 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import { useCounterStore } from '~/stores/counter'
+import { computed } from 'vue'
+import counterStore from '~/store/counterStore'
 
-const counter = useCounterStore()
+const currentCount = computed(() => counterStore.count)
 
 const increment = (): void => {
-  counter.count++
+  counterStore.incr()
 }
 
 const reset = (): void => {
-  counter.reset()
+  counterStore.reset()
 }
 </script>

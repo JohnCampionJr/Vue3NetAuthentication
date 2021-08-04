@@ -5,7 +5,11 @@
       <div
         class="flex-row items-center justify-between flex-shrink-0 hidden px-4 pr-8 text-blue-500 bg-gray-100 border-b border-gray-300 md:flex h-14"
       >
-        <a href="https://github.com/JohnCampionJr/Vue3Net6Validation" target="_blank" class="ml-md-auto">About</a>
+        <LoginDisplay />
+
+        <a href="https://github.com/JohnCampionJr/Vue3Net6Authentication" target="_blank" class="ml-md-auto"
+          >About</a
+        >
       </div>
       <div class="flex-grow py-5 pl-8 pr-6">
         <router-view />

@@ -1,6 +1,6 @@
 using System;
 
-namespace Vue3Net6Validation
+namespace Vue3Net6Authentication
 {
     public class WeatherForecast
     {

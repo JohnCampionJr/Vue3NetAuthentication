@@ -3,9 +3,7 @@
     class="flex flex-col flex-shrink-0 text-white md:w-72 md:h-screen bg-gradient-to-b-70 from-blazor-blue to-blazor-indigo"
   >
     <div class="flex flex-row items-center justify-between px-4 text-white bg-black h-14 bg-opacity-40">
-      <router-link to="/" class="text-xl text-white">
-        Vue Validation
-      </router-link>
+      <router-link to="/" class="text-xl text-white">Vue3 Net6 Authentication</router-link>
       <button
         class="px-2 py-1 text-white text-opacity-50 bg-white border border-white rounded md:hidden bg-opacity-10 border-opacity-10"
         @click="ToggleNavMenu"
@@ -27,27 +25,28 @@
         </li> -->
 
         <li>
-          <router-link to="/">
-            <oi-home class="w-6 mr-3" />
-            Home
-          </router-link>
+          <router-link to="/"><oi-home class="w-6 mr-3" /> Home </router-link>
         </li>
         <li>
-          <router-link to="/Counter">
-            <oi-plus class="w-6 mr-3" />Counter
-          </router-link>
+          <router-link to="/Counter"><oi-plus class="w-6 mr-3" /> Counter </router-link>
         </li>
         <li>
-          <router-link to="/Fetch-Data">
-            <oi-list-rich class="w-6 mr-3" />
-            Fetch Data
-          </router-link>
+          <router-link to="/Fetch-Data"><oi-list-rich class="w-6 mr-3" /> Fetch Data </router-link>
         </li>
         <li>
-          <router-link to="/Validation">
-            <oi-list-rich class="w-6 mr-3" />
-            Validation
-          </router-link>
+          <router-link to="/Validation-Setup"><oi-list-rich class="w-6 mr-3" /> Validation </router-link>
+        </li>
+        <li>
+          <router-link to="/account/login"><oi-fork class="w-6 mr-3" /> Login </router-link>
+        </li>
+        <li>
+          <router-link to="/account/logout"><oi-fork class="w-6 mr-3" /> Logout </router-link>
+        </li>
+        <li>
+          <router-link to="/account/manage"><oi-fork class="w-6 mr-3" /> Manage </router-link>
+        </li>
+        <li>
+          <router-link to="/admin"><oi-fork class="w-6 mr-3" /> Admin </router-link>
         </li>
       </ul>
     </div>
