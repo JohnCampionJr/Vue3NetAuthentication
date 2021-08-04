@@ -14,9 +14,10 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0-preview.6.21355.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0-preview.6.21355.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.0-preview.6.21355.2" />
-    <PackageReference Include="MongoFramework" Version="0.25.0" />
-    <PackageReference Include="MongoFramework.AspNetCore.Identity" Version="0.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.6.21355.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.6.21352.1" />
     <PackageReference Include="QRCoder" Version="1.4.1" />
     <PackageReference Include="Reinforced.Typings" Version="1.6.1" />
   </ItemGroup>

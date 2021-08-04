@@ -9,13 +9,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MongoFramework.AspNetCore.Identity;
 using System.Text;
 using System.Text.Json;
 using Vue3Net6Authentication.Extensions;
@@ -35,11 +35,12 @@ namespace Vue3Net6Authentication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMediatR(typeof(Startup));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMongoDbContext<ApplicationDbContext>(o =>
-                o.ConnectionString = Configuration.GetConnectionString("DefaultConnection"));
-
-            services.AddMongoIdentity<ApplicationUser, MongoIdentityRole, ApplicationDbContext>(options => options.SignIn.RequireConfirmedAccount = true);
+            services.AddDefaultIdentity<ApplicationUser>()  //options => options.SignIn.RequireConfirmedAccount = true
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
