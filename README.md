@@ -1,4 +1,4 @@
-# Vue3Net6Authentication
+# Vue3 Net6Authentication
 A Vue3 App with Authentication/Authorization without IdentityServer
 
 The goal of this is to build an alternative Vue-based authentication system that does not use Identity Server.

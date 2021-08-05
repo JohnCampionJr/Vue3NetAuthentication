@@ -1,13 +1,19 @@
 {
   "folders": [
-	{
-		"path": "src"
-	},
-	{
-		"path": "src\\ClientApp"
-	}
-],
+    {
+      "path": "src","name": "Server"
+    },
+    {
+      "path": "src\\ClientApp", "name": "VueClientApp"
+    },
+    {
+      "path": ".", "name": "Root"
+    }
+  ],
   "settings": {
+    "files.exclude": {
+      "src": true,
+    },
     "cSpell.words": ["Vitesse"],
     "i18n-ally.keystyle": "nested",
     "i18n-ally.localesPaths": "locales",

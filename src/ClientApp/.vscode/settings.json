@@ -13,4 +13,7 @@
   "files.associations": {
     "*.css": "postcss",
   },
+  "files.exclude": {
+      "src": false,
+  },
 }

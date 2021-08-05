@@ -2,8 +2,12 @@
   <div>
     <h4>Validation Sample</h4>
     <hr class="mb-5" />
-    <div v-if="message" class="alert alert-success" role="alert">{{ message }}</div>
-    <div v-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
+    <div v-if="message" class="alert alert-success" role="alert">
+      {{ message }}
+    </div>
+    <div v-if="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
     <Form v-slot="{ errors }" :validation-schema="PersonSchema" @submit="onSubmit">
       <p>
         <label>Name: </label>
@@ -39,7 +43,9 @@
         <ErrorMessage class="invalid-feedback" name="emailAddress" />
       </p>
 
-      <button type="submit" class="mr-1 btn btn-primary">Save</button>
+      <button type="submit" class="mr-1 btn btn-primary">
+        Save
+      </button>
     </Form>
   </div>
 </template>
@@ -73,7 +79,7 @@ const onSubmit = (values: any, actions: SubmissionContext) => {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .is-invalid {
   @apply border-red-300;
 }

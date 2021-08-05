@@ -5,7 +5,6 @@
     "dev": "node aspnetcore-https && run-script-os",
     "dev:windows": "vite --port 5002 --https.cert %APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem --https.key %APPDATA%\\ASP.NET\\https\\%npm_package_name%.key",
     "dev:default": "vite --port 5002 --https.cert $HOME/.aspnet/https/${npm_package_name}.pem --https.key $HOME/.aspnet/https/${npm_package_name}.key",
-    "devorig": "vite --port 3333 --open",
     "build": "cross-env NODE_ENV=production vite-ssg build",
     "preview": "vite preview",
     "preview-https": "serve dist"
