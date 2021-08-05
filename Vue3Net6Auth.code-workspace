@@ -1,0 +1,23 @@
+{
+  "folders": [
+	{
+		"path": "src"
+	},
+	{
+		"path": "src\\ClientApp"
+	}
+],
+  "settings": {
+    "cSpell.words": ["Vitesse"],
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.localesPaths": "locales",
+    "i18n-ally.sortKeys": true,
+    "prettier.enable": false,
+    "typescript.tsdk": "src/ClientApp/node_modules/typescript/lib",
+    "volar.tsPlugin": true,
+    "volar.tsPluginStatus": false,
+    "files.associations": {
+      "*.css": "postcss",
+    },
+  }
+}
