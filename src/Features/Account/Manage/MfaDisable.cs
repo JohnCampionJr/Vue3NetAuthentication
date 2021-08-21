@@ -24,11 +24,11 @@ public class MfaDisable
             var disableMfaResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disableMfaResult.Succeeded)
             {
-                return new Result().Failed(
+                return new Result().Error(
                     $"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(_user)}'.");
             }
 
-            return new Result().Succeeded(
+            return new Result().Success(
                 "Mfa has been disabled. You can reenable 2fa when you setup an authenticator app");
         }
     }

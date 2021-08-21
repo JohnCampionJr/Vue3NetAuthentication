@@ -36,7 +36,7 @@ public class ResendEmailConfirmation
 
             if (user == null)
             {
-                return new Result().Succeeded("Verification email sent. Please check your email.");
+                return new Result().Success("Verification email sent. Please check your email.");
             }
 
             var email = await _userManager.GetEmailAsync(user);
@@ -54,7 +54,7 @@ public class ResendEmailConfirmation
             await _emailService.SendAsync(email, "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            return new Result().Succeeded("Verification email sent. Please check your email.");
+            return new Result().Success("Verification email sent. Please check your email.");
         }
     }
 }

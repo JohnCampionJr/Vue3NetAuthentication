@@ -37,7 +37,6 @@ public class MfaInfo
                 IsMfaEnabled = await _userManager.GetTwoFactorEnabledAsync(user),
                 IsMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
                 RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
-                IsSuccessful = true
             };
             return result;
         }

@@ -65,7 +65,7 @@ public class UserProfile
                 statusMessage = setPhoneResult.Succeeded ? "Your profile has been updated" : "Unexpected error when trying to set phone number.";
             }
 
-            return new Result().Succeeded(statusMessage);
+            return new Result().Success(statusMessage);
         }
     }
 }

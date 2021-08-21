@@ -19,7 +19,7 @@ public class MfaForgetBrowser
         {
             await _signInManager.ForgetTwoFactorClientAsync();
 
-            return new Result().Succeeded(
+            return new Result().Success(
                 "The current browser has been forgotten. When you login again from this browser you will be prompted for your Mfa code.");
         }
     }

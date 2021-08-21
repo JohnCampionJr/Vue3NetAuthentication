@@ -5,7 +5,7 @@ public class AccountController : MediatrControllerBase
     public AccountController(ISender sender) : base(sender) { }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginPassword.Command model) => await Send(model);
+    public async Task<IActionResult> LoginNo(LoginPassword.Command model) => await Send(model);
 
     [HttpPost]
     public async Task<IActionResult> CheckMfa(LoginMultiFactor.Query model) => await Send(model);

@@ -38,9 +38,9 @@ public class LoginMultiFactor
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
-            if (user == null) return new QueryResult().Failed();
+            if (user == null) return new QueryResult().Error();
 
-            return new QueryResult().Succeeded();
+            return new QueryResult().Success();
         }
     }
 
@@ -59,19 +59,19 @@ public class LoginMultiFactor
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
+            if (user == null) return new Result().Error("Unable to load two-factor authentication user.");
 
             var authenticatorCode = request.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, request.RememberMachine);
 
-            if (!result.Succeeded) return new Result().Failed("Invalid authenticator code.");
+            if (!result.Succeeded) return new Result().Error("Invalid authenticator code.");
 
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var token = _jwtHelper.GenerateJwt(user, roles);
 
-            return new Result { IsSuccessful = true, Token = token };
+            return new Result { Token = token };
         }
     }
 }

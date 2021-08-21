@@ -41,11 +41,11 @@ public class ChangePassword
 
             if (!changePasswordResult.Succeeded)
             {
-                return new Result().Failed(changePasswordResult.Errors.First().Description);
+                return new Result().Error(changePasswordResult.Errors.First().Description);
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            return new Result().Succeeded("Your password has been changed.");
+            return new Result().Success("Your password has been changed.");
         }
     }
 }

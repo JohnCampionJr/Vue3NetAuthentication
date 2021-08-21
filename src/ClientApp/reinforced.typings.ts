@@ -5,12 +5,22 @@
 module Features.Base {
 	export interface IBaseResult
 	{
-		IsSuccessful: boolean;
-		Message: string;
-		Errors: { [key:string]: string };
 	}
 }
 module Features.Account {
+	export interface ILoginCommand
+	{
+		Email: string;
+		Password: string;
+		RememberMe: boolean;
+	}
+	export interface ILoginResult extends Features.Base.IBaseResult
+	{
+		RequiresTwoFactor: boolean;
+		IsLockedOut: boolean;
+		RequiresEmailConfirmation: boolean;
+		Token: string;
+	}
 	export interface ILoginCommand
 	{
 		Email: string;

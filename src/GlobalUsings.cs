@@ -31,7 +31,6 @@ global using Reinforced.Typings.Attributes;
 global using Features.Account;
 global using Features.Base;
 global using Vue3Net6Authentication.Data;
-global using Vue3Net6Authentication.Extensions;
 global using Vue3Net6Authentication.Models;
 global using Vue3Net6Authentication.Services;
 

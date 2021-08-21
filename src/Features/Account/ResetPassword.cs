@@ -36,7 +36,7 @@ public class ResetPassword
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null) return new Result().Succeeded();
+            if (user == null) return new Result().Success();
 
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
 
@@ -44,10 +44,10 @@ public class ResetPassword
 
             if (!result.Succeeded)
             {
-                return new Result().Failed(result.Errors.First().Description);
+                return new Result().Error(result.Errors.First().Description);
             }
 
-            return new Result().Succeeded();
+            return new Result().Success();
         }
     }
 }

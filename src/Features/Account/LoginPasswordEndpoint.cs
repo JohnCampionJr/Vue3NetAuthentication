@@ -1,9 +1,8 @@
 ﻿namespace Features.Account;
-
-public class LoginPassword
+public class LoginPasswordEndpoint : BaseEndpoint
 {
     [TsInterface(Name = "LoginCommand")]
-    public class Command : IRequest<Result>
+    public class Command
     {
         public string Email { get; set; }
         public string Password { get; set; }
@@ -28,23 +27,18 @@ public class LoginPassword
         public string Token { get; set; }
     }
 
-    public class CommandHandler : IRequestHandler<Command, Result>
-    {
-        private readonly IJwtHelper _jwtHelper;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-
-        public CommandHandler(IJwtHelper jwtHelper,
-            SignInManager<ApplicationUser> signInManager)
-        {
-            _jwtHelper = jwtHelper;
-            _signInManager = signInManager;
-        }
-
-        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+//    public class Endpoint : BaseEndpoint
+//    {
+        [HttpPost("api/account/login")]
+        public async Task<Result> Handle(
+            Command request, 
+            [FromServices] IJwtHelper _jwtHelper,
+            [FromServices] SignInManager<ApplicationUser> _signInManager
+        )
         {
             var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, false, false);
 
-            if (result.RequiresTwoFactor) return new Result { Status = ResultStatus.Unauthorized, RequiresTwoFactor = true };
+            if (result.RequiresTwoFactor) return new Result() { Status = ResultStatus.Unauthorized, RequiresTwoFactor = true };
             if (result.IsLockedOut) return new Result { Status = ResultStatus.Unauthorized, IsLockedOut = true };
 
             if (result.IsNotAllowed)
@@ -65,5 +59,6 @@ public class LoginPassword
 
             return new Result { Token = token };
         }
-    }
+  //  }
+
 }

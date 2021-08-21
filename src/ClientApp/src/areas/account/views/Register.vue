@@ -73,8 +73,8 @@ const onSubmit = async (values: any, actions: SubmissionContext) => {
     router.push('/account/registerconfirmation')
   } catch (ex) {
     error.value = ex.response.message
-    actions.setErrors(ex.response.data.errors)
-    var x = document.getElementsByName(Object.keys(ex.response.data.errors)[0])[0]
+    actions.setErrors(ex.response.data.validationErrors)
+    var x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }
 }

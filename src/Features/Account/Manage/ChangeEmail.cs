@@ -60,7 +60,7 @@ public class ChangeEmail
                 statusMessage = "Your email is unchanged.";
             }
 
-            return new Result().Succeeded(statusMessage);
+            return new Result().Success(statusMessage);
         }
     }
 }

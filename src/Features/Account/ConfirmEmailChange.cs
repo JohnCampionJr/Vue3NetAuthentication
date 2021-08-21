@@ -44,7 +44,7 @@ public class ConfirmEmailChange
             var user = await _signInManager.UserManager.FindByIdAsync(request.UserId);
             if (user == null)
             {
-                return new Result().Failed($"Unable to load user with ID '{request.UserId}'.");
+                return new Result().Error($"Unable to load user with ID '{request.UserId}'.");
             }
 
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -52,7 +52,7 @@ public class ConfirmEmailChange
 
             if (!result.Succeeded)
             {
-                return new Result().Failed("Error confirming your email.");
+                return new Result().Error("Error confirming your email.");
             }
 
             // In our UI email and user name are one and the same, so when we update the email
@@ -62,7 +62,7 @@ public class ConfirmEmailChange
 
             if (!setUserNameResult.Succeeded)
             {
-                return new Result().Failed("Error changing user name.");
+                return new Result().Error("Error changing user name.");
             }
 
             if (_user.Identity.IsAuthenticated)
@@ -72,11 +72,11 @@ public class ConfirmEmailChange
                 {
                     var roles = await _signInManager.UserManager.GetRolesAsync(user);
                     var token = _jwtHelper.GenerateJwt(user, roles);
-                    return (new Result { Token = token }).Succeeded("Thank you for confirming your email change.");
+                    return (new Result { Token = token }).Success("Thank you for confirming your email change.");
                 }
             }
 
-            return new Result().Succeeded("Thank you for confirming your email change.");
+            return new Result().Success("Thank you for confirming your email change.");
         }
     }
 }

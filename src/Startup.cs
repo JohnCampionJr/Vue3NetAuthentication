@@ -53,7 +53,7 @@ public class Startup
             {
                 options.InvalidModelStateResponseFactory = context =>
                 {
-                    return new BadRequestObjectResult(new BaseResult().WithErrors(context.ModelState));
+                    return new BadRequestObjectResult(new Result().Invalid(context.ModelState));
                 };
             })
             .AddFluentValidation(fv =>

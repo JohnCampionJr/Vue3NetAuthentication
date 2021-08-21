@@ -35,19 +35,19 @@ public class LoginRecoveryCode
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
+            if (user == null) return new Result().Error("Unable to load two-factor authentication user.");
 
             var authenticatorCode = request.RecoveryCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(authenticatorCode);
 
-            if (!result.Succeeded) return new Result().Failed("Invalid recovery code.");
+            if (!result.Succeeded) return new Result().Error("Invalid recovery code.");
 
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var token = _jwtHelper.GenerateJwt(user, roles);
 
-            return new Result { IsSuccessful = true, Token = token };
+            return new Result { Token = token };
         }
     }
 }

@@ -36,7 +36,7 @@ public class ConfirmEmail
             var user = await _signInManager.UserManager.FindByIdAsync(request.UserId);
             if (user == null)
             {
-                return new Result().Failed($"Unable to load user with ID '{request.UserId}'.");
+                return new Result().Error($"Unable to load user with ID '{request.UserId}'.");
             }
 
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -44,10 +44,10 @@ public class ConfirmEmail
 
             if (!result.Succeeded)
             {
-                return new Result().Failed("Error confirming your email.");
+                return new Result().Error("Error confirming your email.");
             }
 
-            return new Result().Succeeded("Thank you for confirming your email. You may now login.");
+            return new Result().Success("Thank you for confirming your email. You may now login.");
         }
     }
 

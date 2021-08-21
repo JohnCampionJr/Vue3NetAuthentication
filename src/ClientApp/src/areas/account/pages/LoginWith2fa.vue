@@ -86,8 +86,8 @@ const onSubmit = async (values: any, actions: any) => {
     }
   } catch (ex) {
     error.value = ex.response.data.message
-    actions.setErrors(ex.response.data.errors)
-    const x = document.getElementsByName(Object.keys(ex.response.data.errors)[0])[0]
+    actions.setErrors(ex.response.data.validationErrors)
+    const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }
 }

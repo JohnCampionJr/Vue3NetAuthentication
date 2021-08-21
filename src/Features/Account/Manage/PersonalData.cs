@@ -54,7 +54,7 @@ public class PersonalData
                 personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
             }
 
-            var result = new QueryResult().Succeeded();
+            var result = new QueryResult().Success();
             result.JsonData = JsonSerializer.Serialize(personalData);
 
             return result;
@@ -85,19 +85,19 @@ public class PersonalData
 
             if (!await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                return new Result().Failed("Incorrect password.");
+                return new Result().Error("Incorrect password.");
             }
 
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
-                return new Result().Failed($"Unexpected error occurred deleting user with ID '{userId}'.");
+                return new Result().Error($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
 
             await _signInManager.SignOutAsync();
 
-            return new Result().Succeeded();
+            return new Result().Success();
         }
     }
 }

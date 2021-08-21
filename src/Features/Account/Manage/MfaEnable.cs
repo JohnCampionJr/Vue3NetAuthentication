@@ -57,7 +57,7 @@ public class MfaEnable
 
         private async Task<QueryResult> LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user)
         {
-            var result = new QueryResult().Succeeded();
+            var result = new QueryResult().Success();
 
             // Load the authenticator key & QR code URI to display on the form
             var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
@@ -135,13 +135,13 @@ public class MfaEnable
 
             if (!isMfaTokenValid)
             {
-                var result = new Result().Failed();
-                result.Errors.Add("VerificationCode", "Verification code is invalid.");
+                var result = new Result().Invalid();
+                result.ValidationErrors.Add("VerificationCode", "Verification code is invalid.");
                 return result;
             }
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return new Result().Succeeded("Your authenticator app has been verified.");
+            return new Result().Success("Your authenticator app has been verified.");
         }
     }
 }

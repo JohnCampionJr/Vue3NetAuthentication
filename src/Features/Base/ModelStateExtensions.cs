@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Vue3Net6Authentication.Extensions;
+namespace Features.Base;
 
 public static class ModelStateExtensions
 {
@@ -12,12 +12,12 @@ public static class ModelStateExtensions
         {
             var key = keyModelStatePair.Key;
 
-            //camelCase the key
+            // camelCase the key
             key = Regex.Replace(key, @"([A-Z])([A-Z]+|[a-z0-9_]+)($|[A-Z]\w*)",
-        m =>
-        {
-            return m.Groups[1].Value.ToLower() + m.Groups[2].Value.ToLower() + m.Groups[3].Value;
-        });
+                m =>
+                {
+                    return m.Groups[1].Value.ToLower() + m.Groups[2].Value.ToLower() + m.Groups[3].Value;
+                });
             var errors = keyModelStatePair.Value.Errors;
             if (errors != null && errors.Count > 0)
             {

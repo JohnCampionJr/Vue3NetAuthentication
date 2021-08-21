@@ -26,7 +26,7 @@ public class MfaResetKey
             await _userManager.ResetAuthenticatorKeyAsync(user);
             await _signInManager.RefreshSignInAsync(user);
 
-            return new Result().Succeeded(
+            return new Result().Success(
                 "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.");
         }
     }

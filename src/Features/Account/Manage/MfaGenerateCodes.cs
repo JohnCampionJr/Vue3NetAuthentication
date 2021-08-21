@@ -28,11 +28,11 @@ public class MfaGenerateCodes
             var userId = await _userManager.GetUserIdAsync(user);
             if (!isTwoFactorEnabled)
             {
-                return new Result().Failed(
+                return new Result().Error(
                     $"Cannot generate recovery codes for user with ID '{userId}' as they do not have 2FA enabled.");
             }
 
-            var result = new Result().Succeeded("You have generated new recovery codes.");
+            var result = new Result().Success("You have generated new recovery codes.");
 
             result.RecoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToArray();
 

@@ -36,7 +36,7 @@ public class ForgotPassword
             if (user == null || !(await _signInManager.UserManager.IsEmailConfirmedAsync(user)))
             {
                 // Don't reveal that the user does not exist or is not confirmed
-                return new Result().Succeeded();
+                return new Result().Success();
             }
 
             var code = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
@@ -51,7 +51,7 @@ public class ForgotPassword
             await _emailService.SendAsync(user.Email, "Reset Password",
                 $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            return new Result().Succeeded();
+            return new Result().Success();
         }
     }
 }

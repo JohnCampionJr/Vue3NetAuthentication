@@ -48,7 +48,7 @@ public class Register
             {
                 var errors = result.Errors.Select(x => x.Description);
 
-                return new Result().WithErrors(errors);
+                return new Result().Error(errors);
             }
 
             // Send confirmation email
@@ -72,7 +72,7 @@ public class Register
                 await _signInManager.UserManager.AddToRoleAsync(newUser, "Admin");
             }
 
-            return new Result().Succeeded();
+            return new Result().Success();
         }
     }
 }

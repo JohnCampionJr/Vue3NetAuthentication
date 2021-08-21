@@ -39,7 +39,7 @@ public class SendEmailConfirmation
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             var statusMessage = "Confirmation link sent. Please check your email.";
-            return new Result().Succeeded(statusMessage);
+            return new Result().Success(statusMessage);
         }
     }
 }

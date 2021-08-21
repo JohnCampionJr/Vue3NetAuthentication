@@ -17,7 +17,7 @@ public class MediatrControllerBase : ControllerBase
         var result = await Sender.Send(request);
         if (result is BaseResult baseResult)
         {
-            if (!baseResult.IsSuccessful)
+            if (!baseResult.IsSuccess)
             {
                 return BadRequest(result);
             }
