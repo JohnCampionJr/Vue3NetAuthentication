@@ -1,78 +1,77 @@
-﻿namespace Features.Account
+﻿namespace Features.Account;
+
+public class LoginMultiFactor
 {
-    public class LoginMultiFactor
+    public class Query : IRequest<QueryResult> { }
+
+    public class QueryResult : BaseResult { }
+
+    public class Command : IRequest<Result>
     {
-        public class Query : IRequest<QueryResult> { }
+        public string TwoFactorCode { get; set; }
+        public bool RememberMachine { get; set; }
+    }
 
-        public class QueryResult : BaseResult { }
-
-        public class Command : IRequest<Result>
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public string TwoFactorCode { get; set; }
-            public bool RememberMachine { get; set; }
+            RuleFor(p => p.TwoFactorCode).NotEmpty().Length(6, 7);
+        }
+    }
+
+    public class Result : BaseResult
+    {
+        public string Token { get; set; }
+    }
+
+    public class QueryHandler : IRequestHandler<Query, QueryResult>
+    {
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public QueryHandler(SignInManager<ApplicationUser> signInManager)
+        {
+            _signInManager = signInManager;
         }
 
-        public class CommandValidator : AbstractValidator<Command>
+        public async Task<QueryResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            public CommandValidator()
-            {
-                RuleFor(p => p.TwoFactorCode).NotEmpty().Length(6, 7);
-            }
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+
+            if (user == null) return new QueryResult().Failed();
+
+            return new QueryResult().Succeeded();
+        }
+    }
+
+    public class CommandHandler : IRequestHandler<Command, Result>
+    {
+        private readonly IJwtHelper _jwtHelper;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public CommandHandler(IJwtHelper jwtHelper,
+            SignInManager<ApplicationUser> signInManager)
+        {
+            _jwtHelper = jwtHelper;
+            _signInManager = signInManager;
         }
 
-        public class Result : BaseResult
+        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            public string Token { get; set; }
-        }
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
 
-        public class QueryHandler : IRequestHandler<Query, QueryResult>
-        {
-            private readonly SignInManager<ApplicationUser> _signInManager;
+            var authenticatorCode = request.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            public QueryHandler(SignInManager<ApplicationUser> signInManager)
-            {
-                _signInManager = signInManager;
-            }
+            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, request.RememberMachine);
 
-            public async Task<QueryResult> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (!result.Succeeded) return new Result().Failed("Invalid authenticator code.");
 
-                if (user == null) return new QueryResult().Failed();
+            var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
-                return new QueryResult().Succeeded();
-            }
-        }
+            var token = _jwtHelper.GenerateJwt(user, roles);
 
-        public class CommandHandler : IRequestHandler<Command, Result>
-        {
-            private readonly IJwtHelper _jwtHelper;
-            private readonly SignInManager<ApplicationUser> _signInManager;
-
-            public CommandHandler(IJwtHelper jwtHelper,
-                SignInManager<ApplicationUser> signInManager)
-            {
-                _jwtHelper = jwtHelper;
-                _signInManager = signInManager;
-            }
-
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-                if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
-
-                var authenticatorCode = request.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-                var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, false, request.RememberMachine);
-
-                if (!result.Succeeded) return new Result().Failed("Invalid authenticator code.");
-
-                var roles = await _signInManager.UserManager.GetRolesAsync(user);
-
-                var token = _jwtHelper.GenerateJwt(user, roles);
-
-                return new Result { IsSuccessful = true, Token = token };
-            }
+            return new Result { IsSuccessful = true, Token = token };
         }
     }
 }

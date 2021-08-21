@@ -1,104 +1,103 @@
-﻿namespace Features.Account.Manage
+﻿namespace Features.Account.Manage;
+
+public class PersonalData
 {
-    public class PersonalData
+    public class Query : IRequest<QueryResult> { }
+
+    public class QueryResult : BaseResult
     {
-        public class Query : IRequest<QueryResult> { }
+        public string JsonData { get; set; }
+    }
 
-        public class QueryResult : BaseResult
+    public class Command : IRequest<Result>
+    {
+        public string Password { get; set; }
+    }
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public string JsonData { get; set; }
+            RuleFor(p => p.Password).NotEmpty().MinimumLength(8);
+        }
+    }
+
+    public class Result : BaseResult { }
+
+    public class QueryHandler : IRequestHandler<Query, QueryResult>
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ClaimsPrincipal _user;
+
+        public QueryHandler(UserManager<ApplicationUser> userManager, IUserAccessor user)
+        {
+            _userManager = userManager;
+            _user = user.User;
         }
 
-        public class Command : IRequest<Result>
+        public async Task<QueryResult> Handle(Query request, CancellationToken cancellationToken)
         {
-            public string Password { get; set; }
-        }
+            var user = await _userManager.GetUserAsync(_user);
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
+            // Only include personal data for download
+            var personalData = new Dictionary<string, string>();
+            var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
+                prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
+            foreach (var p in personalDataProps)
             {
-                RuleFor(p => p.Password).NotEmpty().MinimumLength(8);
-            }
-        }
-
-        public class Result : BaseResult { }
-
-        public class QueryHandler : IRequestHandler<Query, QueryResult>
-        {
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly ClaimsPrincipal _user;
-
-            public QueryHandler(UserManager<ApplicationUser> userManager, IUserAccessor user)
-            {
-                _userManager = userManager;
-                _user = user.User;
+                personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
             }
 
-            public async Task<QueryResult> Handle(Query request, CancellationToken cancellationToken)
+            var logins = await _userManager.GetLoginsAsync(user);
+            foreach (var l in logins)
             {
-                var user = await _userManager.GetUserAsync(_user);
-
-                // Only include personal data for download
-                var personalData = new Dictionary<string, string>();
-                var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
-                    prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-                foreach (var p in personalDataProps)
-                {
-                    personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
-                }
-
-                var logins = await _userManager.GetLoginsAsync(user);
-                foreach (var l in logins)
-                {
-                    personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
-                }
-
-                var result = new QueryResult().Succeeded();
-                result.JsonData = JsonSerializer.Serialize(personalData);
-
-                return result;
-
-                // Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
-                // return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
-
+                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
             }
+
+            var result = new QueryResult().Succeeded();
+            result.JsonData = JsonSerializer.Serialize(personalData);
+
+            return result;
+
+            // Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+            // return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
 
         }
 
-        public class CommandHandler : IRequestHandler<Command, Result>
+    }
+
+    public class CommandHandler : IRequestHandler<Command, Result>
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ClaimsPrincipal _user;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public CommandHandler(UserManager<ApplicationUser> userManager, IUserAccessor user, SignInManager<ApplicationUser> signInManager)
         {
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly ClaimsPrincipal _user;
-            private readonly SignInManager<ApplicationUser> _signInManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _user = user.User;
+        }
 
-            public CommandHandler(UserManager<ApplicationUser> userManager, IUserAccessor user, SignInManager<ApplicationUser> signInManager)
+        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.GetUserAsync(_user);
+
+            if (!await _userManager.CheckPasswordAsync(user, request.Password))
             {
-                _userManager = userManager;
-                _signInManager = signInManager;
-                _user = user.User;
+                return new Result().Failed("Incorrect password.");
             }
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+            var result = await _userManager.DeleteAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+            if (!result.Succeeded)
             {
-                var user = await _userManager.GetUserAsync(_user);
-
-                if (!await _userManager.CheckPasswordAsync(user, request.Password))
-                {
-                    return new Result().Failed("Incorrect password.");
-                }
-
-                var result = await _userManager.DeleteAsync(user);
-                var userId = await _userManager.GetUserIdAsync(user);
-                if (!result.Succeeded)
-                {
-                    return new Result().Failed($"Unexpected error occurred deleting user with ID '{userId}'.");
-                }
-
-                await _signInManager.SignOutAsync();
-
-                return new Result().Succeeded();
+                return new Result().Failed($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
+
+            await _signInManager.SignOutAsync();
+
+            return new Result().Succeeded();
         }
     }
 }

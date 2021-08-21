@@ -1,54 +1,53 @@
-﻿namespace Features.Account
+﻿namespace Features.Account;
+
+public class LoginRecoveryCode
 {
-    public class LoginRecoveryCode
+    public class Command : IRequest<Result>
     {
-        public class Command : IRequest<Result>
+        public string RecoveryCode { get; set; }
+    }
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public string RecoveryCode { get; set; }
+            RuleFor(p => p.RecoveryCode).NotEmpty().Length(6, 7);
+        }
+    }
+
+    public class Result : BaseResult
+    {
+        public string Token { get; set; }
+    }
+
+    public class CommandHandler : IRequestHandler<Command, Result>
+    {
+        private readonly IJwtHelper _jwtHelper;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public CommandHandler(IJwtHelper jwtHelper,
+            SignInManager<ApplicationUser> signInManager)
+        {
+            _jwtHelper = jwtHelper;
+            _signInManager = signInManager;
         }
 
-        public class CommandValidator : AbstractValidator<Command>
+        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            public CommandValidator()
-            {
-                RuleFor(p => p.RecoveryCode).NotEmpty().Length(6, 7);
-            }
-        }
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
 
-        public class Result : BaseResult
-        {
-            public string Token { get; set; }
-        }
+            var authenticatorCode = request.RecoveryCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-        public class CommandHandler : IRequestHandler<Command, Result>
-        {
-            private readonly IJwtHelper _jwtHelper;
-            private readonly SignInManager<ApplicationUser> _signInManager;
+            var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(authenticatorCode);
 
-            public CommandHandler(IJwtHelper jwtHelper,
-                SignInManager<ApplicationUser> signInManager)
-            {
-                _jwtHelper = jwtHelper;
-                _signInManager = signInManager;
-            }
+            if (!result.Succeeded) return new Result().Failed("Invalid recovery code.");
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-                if (user == null) return new Result().Failed("Unable to load two-factor authentication user.");
+            var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
-                var authenticatorCode = request.RecoveryCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+            var token = _jwtHelper.GenerateJwt(user, roles);
 
-                var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(authenticatorCode);
-
-                if (!result.Succeeded) return new Result().Failed("Invalid recovery code.");
-
-                var roles = await _signInManager.UserManager.GetRolesAsync(user);
-
-                var token = _jwtHelper.GenerateJwt(user, roles);
-
-                return new Result { IsSuccessful = true, Token = token };
-            }
+            return new Result { IsSuccessful = true, Token = token };
         }
     }
 }

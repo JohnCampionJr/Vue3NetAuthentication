@@ -1,6 +1,5 @@
-﻿namespace Vue3Net6Authentication.Models
+﻿namespace Vue3Net6Authentication.Models;
+
+public class ApplicationUser : MongoIdentityUser
 {
-    public class ApplicationUser : MongoIdentityUser
-    {
-    }
 }

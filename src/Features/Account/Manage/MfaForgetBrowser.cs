@@ -1,27 +1,26 @@
-﻿namespace Features.Account.Manage
+﻿namespace Features.Account.Manage;
+
+public class MfaForgetBrowser
 {
-    public class MfaForgetBrowser
+    public class Command : IRequest<Result> { }
+
+    public class Result : BaseResult { }
+
+    public class CommandHandler : IRequestHandler<Command, Result>
     {
-        public class Command : IRequest<Result> { }
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public class Result : BaseResult { }
-
-        public class CommandHandler : IRequestHandler<Command, Result>
+        public CommandHandler(SignInManager<ApplicationUser> signInManager)
         {
-            private readonly SignInManager<ApplicationUser> _signInManager;
+            _signInManager = signInManager;
+        }
 
-            public CommandHandler(SignInManager<ApplicationUser> signInManager)
-            {
-                _signInManager = signInManager;
-            }
+        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
+        {
+            await _signInManager.ForgetTwoFactorClientAsync();
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
-            {
-                await _signInManager.ForgetTwoFactorClientAsync();
-
-                return new Result().Succeeded(
-                    "The current browser has been forgotten. When you login again from this browser you will be prompted for your Mfa code.");
-            }
+            return new Result().Succeeded(
+                "The current browser has been forgotten. When you login again from this browser you will be prompted for your Mfa code.");
         }
     }
 }

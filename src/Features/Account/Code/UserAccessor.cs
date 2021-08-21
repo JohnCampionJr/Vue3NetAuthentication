@@ -1,18 +1,16 @@
-﻿namespace Features.Account
+﻿namespace Features.Account;
+
+public interface IUserAccessor
 {
-    public interface IUserAccessor
-    {
-        ClaimsPrincipal User { get; }
-    }
+    ClaimsPrincipal User { get; }
+}
 
-    public class UserAccessor : IUserAccessor
+public class UserAccessor : IUserAccessor
+{
+    private readonly IHttpContextAccessor _accessor;
+    public UserAccessor(IHttpContextAccessor accessor)
     {
-        private readonly IHttpContextAccessor _accessor;
-        public UserAccessor(IHttpContextAccessor accessor)
-        {
-            _accessor = accessor;
-        }
-        public ClaimsPrincipal User => _accessor.HttpContext.User;
+        _accessor = accessor;
     }
-
+    public ClaimsPrincipal User => _accessor.HttpContext.User;
 }

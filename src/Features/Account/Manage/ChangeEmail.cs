@@ -1,67 +1,66 @@
-﻿namespace Features.Account.Manage
+﻿namespace Features.Account.Manage;
+
+public class ChangeEmail
 {
-    public class ChangeEmail
+    public class Command : IRequest<Result>
     {
-        public class Command : IRequest<Result>
+        public string NewEmail { get; set; }
+    }
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public string NewEmail { get; set; }
+            RuleFor(p => p.NewEmail).NotNull().NotEmpty().EmailAddress();
+        }
+    }
+
+    public class Result : BaseResult { }
+
+    public class CommandHandler : IRequestHandler<Command, Result>
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ClaimsPrincipal _user;
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IEmailService _emailService;
+
+        public CommandHandler(UserManager<ApplicationUser> userManager, IUserAccessor user, IEmailService emailService, IHttpContextAccessor contextAccessor)
+        {
+            _userManager = userManager;
+            _user = user.User;
+            _emailService = emailService;
+            _contextAccessor = contextAccessor;
         }
 
-        public class CommandValidator : AbstractValidator<Command>
+        public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            public CommandValidator()
+            var user = await _userManager.GetUserAsync(_user);
+            var email = await _userManager.GetEmailAsync(user);
+            string statusMessage;
+
+            if (request.NewEmail != email)
             {
-                RuleFor(p => p.NewEmail).NotNull().NotEmpty().EmailAddress();
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
+
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var httpRequest = _contextAccessor.HttpContext.Request;
+                var domain = $"{httpRequest.Scheme}://{httpRequest.Host}";
+
+                var callbackUrl = $"{domain}/Account/ConfirmEmailChange?userId={Uri.EscapeDataString(userId)}&code={code}&email={request.NewEmail}";
+
+                await _emailService.SendAsync(request.NewEmail, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                statusMessage = "Confirmation link to change email sent. Please check your email.";
             }
-        }
-
-        public class Result : BaseResult { }
-
-        public class CommandHandler : IRequestHandler<Command, Result>
-        {
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly ClaimsPrincipal _user;
-            private readonly IHttpContextAccessor _contextAccessor;
-            private readonly IEmailService _emailService;
-
-            public CommandHandler(UserManager<ApplicationUser> userManager, IUserAccessor user, IEmailService emailService, IHttpContextAccessor contextAccessor)
+            else
             {
-                _userManager = userManager;
-                _user = user.User;
-                _emailService = emailService;
-                _contextAccessor = contextAccessor;
+                statusMessage = "Your email is unchanged.";
             }
 
-            public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var user = await _userManager.GetUserAsync(_user);
-                var email = await _userManager.GetEmailAsync(user);
-                string statusMessage;
-
-                if (request.NewEmail != email)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
-
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    var httpRequest = _contextAccessor.HttpContext.Request;
-                    var domain = $"{httpRequest.Scheme}://{httpRequest.Host}";
-
-                    var callbackUrl = $"{domain}/Account/ConfirmEmailChange?userId={Uri.EscapeDataString(userId)}&code={code}&email={request.NewEmail}";
-
-                    await _emailService.SendAsync(request.NewEmail, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    statusMessage = "Confirmation link to change email sent. Please check your email.";
-                }
-                else
-                {
-                    statusMessage = "Your email is unchanged.";
-                }
-
-                return new Result().Succeeded(statusMessage);
-            }
+            return new Result().Succeeded(statusMessage);
         }
     }
 }
