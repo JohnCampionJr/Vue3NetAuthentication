@@ -35,7 +35,9 @@ import { useRouter, useRoute } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import type { ILoginResult } from '../models'
-import authStore from '~/store/authStore'
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 
 const router = useRouter()
 const route = useRoute()

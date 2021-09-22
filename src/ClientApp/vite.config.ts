@@ -69,8 +69,6 @@ export default defineConfig({
       'vue',
       'vue-router',
       '@vueuse/core',
-      'vuex',
-      'vuex-module-decorators',
       'axios',
       'date-fns',
       'vee-validate',

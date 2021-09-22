@@ -1,28 +1,33 @@
 ﻿<template>
   <h1>Confirm Email Change</h1>
-  <TwAlertSuccess v-if="success">{{ success }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="success">
+    {{ success }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
-import authStore from '~/store/authStore'
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 
 const success = ref('')
 const error = ref('')
 const router = useRouter()
 const route = useRoute()
 
-onMounted(async () => {
+onMounted(async() => {
   const userId = route.query.userId
   const code = route.query.code
   const email = route.query.email
 
-  if (!userId || !code || !email) {
+  if (!userId || !code || !email)
     router.push('/')
-  }
 
   let url = '/api/account/confirmemailchange'
 
@@ -32,7 +37,8 @@ onMounted(async () => {
     const response = await axios.post(url, { userId, code, email })
     if (authStore.isAuthenticated && response.data.token) authStore.login(response.data.token)
     success.value = response.data.message
-  } catch {
+  }
+  catch {
     router.push('/')
   }
 })

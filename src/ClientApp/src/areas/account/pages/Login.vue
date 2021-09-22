@@ -54,7 +54,9 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router'
 import type { ILoginCommand, ILoginResult } from '../models'
-import authStore from '~/store/authStore'
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 
 const router = useRouter()
 const route = useRoute()

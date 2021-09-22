@@ -1,7 +1,9 @@
-import authStore from '~/store/authStore'
 import { UserModule } from '~/types'
+import { useAuthStore } from '~/stores/auth'
 
-export const install: UserModule = ({ isClient, router }) => {
+export const install: UserModule = ({ router }) => {
+  const authStore = useAuthStore()
+
   const token = localStorage.getItem('token')
   if (token) authStore.updateToken(token)
 

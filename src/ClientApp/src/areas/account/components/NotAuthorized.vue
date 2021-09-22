@@ -6,7 +6,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import authStore from '~/store/authStore'
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 
 const isAuthorized = computed(() => authStore.isAuthenticated)
 </script>

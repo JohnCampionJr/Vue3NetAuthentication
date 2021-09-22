@@ -41,8 +41,6 @@ specifiers:
   vue-i18n: ^9.1.7
   vue-router: ^4.0.11
   vue-tsc: ^0.3.0
-  vuex: ^4.0.2
-  vuex-module-decorators: ^1.0.1
   yup: ^0.32.9
 
 dependencies:
@@ -60,7 +58,6 @@ dependencies:
   vue-global-api: 0.4.1_vue@3.2.4
   vue-i18n: 9.1.7_vue@3.2.4
   vue-router: 4.0.11_vue@3.2.4
-  vuex: 4.0.2_vue@3.2.4
   yup: 0.32.9
 
 devDependencies:
@@ -90,7 +87,6 @@ devDependencies:
   vite-plugin-pages: 0.15.1_7fe3aad99197253b81205fb92dfdbad3
   vite-plugin-vue-layouts: 0.3.1_vite@2.5.0
   vue-tsc: 0.3.0_typescript@4.3.5
-  vuex-module-decorators: 1.0.1_vue@3.2.4+vuex@4.0.2
 
 packages:
 
@@ -4052,26 +4048,6 @@ packages:
       '@vue/compiler-dom': 3.2.4
       '@vue/runtime-dom': 3.2.4
       '@vue/shared': 3.2.4
-
-  /vuex-module-decorators/1.0.1_vue@3.2.4+vuex@4.0.2:
-    resolution: {integrity: sha512-FLWZsXV5XAtl/bcKUyQFpnSBtpc3wK/7zSdy9oKbyp71mZd4ut5y2zSd219wWW9OG7WUOlVwac4rXFFDVnq7ug==}
-    engines: {node: '>= 8', npm: '>= 5', yarn: '>= 1'}
-    peerDependencies:
-      vue: '>=2'
-      vuex: '3'
-    dependencies:
-      vue: 3.2.4
-      vuex: 4.0.2_vue@3.2.4
-    dev: true
-
-  /vuex/4.0.2_vue@3.2.4:
-    resolution: {integrity: sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==}
-    peerDependencies:
-      vue: ^3.0.2
-    dependencies:
-      '@vue/devtools-api': 6.0.0-beta.15
-      vue: 3.2.4
-    dev: false
 
   /which-boxed-primitive/1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}

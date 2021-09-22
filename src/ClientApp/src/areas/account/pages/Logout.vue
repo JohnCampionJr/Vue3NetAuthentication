@@ -3,7 +3,9 @@
 </template>
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
-import authStore from '~/store/authStore'
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 
 const router = useRouter()
 const route = useRoute()
