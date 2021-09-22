@@ -4,7 +4,7 @@
       "path": "src","name": "Server"
     },
     {
-      "path": "src\\ClientApp", "name": "VueClientApp"
+      "path": "src/ClientApp", "name": "VueClientApp"
     },
     {
       "path": ".", "name": "Root"
