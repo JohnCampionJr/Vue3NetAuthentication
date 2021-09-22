@@ -13,6 +13,8 @@ specifiers:
   '@vitejs/plugin-vue': ^1.4.0
   '@vue/compiler-sfc': ^3.2.4
   '@vue/server-renderer': ^3.2.4
+  '@vuelidate/core': ^2.0.0-alpha.24
+  '@vuelidate/validators': ^2.0.0-alpha.21
   '@vueuse/core': ^5.3.0
   '@vueuse/head': ^0.6.0
   autoprefixer: ^10.3.2
@@ -44,6 +46,8 @@ specifiers:
   yup: ^0.32.9
 
 dependencies:
+  '@vuelidate/core': 2.0.0-alpha.26_vue@3.2.4
+  '@vuelidate/validators': 2.0.0-alpha.22_vue@3.2.4
   '@vueuse/core': 5.3.0_vue@3.2.4
   '@vueuse/head': 0.6.0_vue@3.2.4
   axios: 0.21.1
@@ -901,6 +905,24 @@ packages:
 
   /@vue/shared/3.2.4:
     resolution: {integrity: sha512-j2j1MRmjalVKr3YBTxl/BClSIc8UQ8NnPpLYclxerK65JIowI4O7n8O8lElveEtEoHxy1d7BelPUDI0Q4bumqg==}
+
+  /@vuelidate/core/2.0.0-alpha.26_vue@3.2.4:
+    resolution: {integrity: sha512-7mtvWgyrYBydqxDhrDfZTzcWvfXQTKdKnVquPWIyH2q7XfZP/mfISK5DqK8ElS8HlomXsWHr+kBtsQrBzLFD/w==}
+    dependencies:
+      vue-demi: 0.11.4_vue@3.2.4
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
+
+  /@vuelidate/validators/2.0.0-alpha.22_vue@3.2.4:
+    resolution: {integrity: sha512-5ddlzwqH9CZpbqCU8SGUI10Sh6JhLB99gfh7l1S2c38gi7ZGP3CVfBk4ETFNoDg+o6SHab660kuAqIzmE+X9SQ==}
+    dependencies:
+      vue-demi: 0.11.4_vue@3.2.4
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+    dev: false
 
   /@vueuse/core/5.3.0_vue@3.2.4:
     resolution: {integrity: sha512-bBL1/JMRHFWmbgQzUZHF4WOwlqfenR1B8+elriXsbnHlogQM5foSz9++WyDBR0YPIVgCJq7fvNLqd4T7+cjc5w==}

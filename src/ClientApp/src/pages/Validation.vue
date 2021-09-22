@@ -61,21 +61,20 @@ const message = ref('')
 const error = ref('')
 const model = reactive({ name: 'Isadora Jarr', age: 39, emailAddress: 'im@nonymous.com' } as Person)
 
-const onSubmit = (values: any, actions: SubmissionContext) => {
+const onSubmit = async (values: any, actions: SubmissionContext) => {
   message.value = ''
   error.value = ''
-  axios
-    .post('api/person', model)
-    .then((response) => {
-      message.value = response.data
-    })
-    .catch((ex) => {
-      error.value = ex.response.message
+  try {
+    let response = await axios.post('api/person', model)
+    message.value = response.data.successMessage
+  }
+  catch (ex) {
+    error.value = ex.response.data.errorMessage
 
-      actions.setErrors(ex.response.data.validationErrors)
-      const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
-      x.focus()
-    })
+    actions.setErrors(ex.response.data.validationErrors)
+    const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
+    x.focus()
+  }
 }
 </script>
 

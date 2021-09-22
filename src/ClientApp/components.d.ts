@@ -29,6 +29,9 @@ declare module 'vue' {
     TwAlertSuccess: typeof import('./src/components/TwAlertSuccess.vue')['default']
     TwCard: typeof import('./src/components/TwCard.vue')['default']
     TwFormGroup: typeof import('./src/components/TwFormGroup.vue')['default']
+    VuelidateFullInput: typeof import('./src/components/VuelidateFullInput.vue')['default']
+    VuelidateInput: typeof import('./src/components/VuelidateInput.vue')['default']
+    VuelidateMessages: typeof import('./src/components/VuelidateMessages.vue')['default']
   }
 }
 
