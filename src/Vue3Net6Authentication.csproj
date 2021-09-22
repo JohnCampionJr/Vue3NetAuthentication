@@ -8,6 +8,7 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <SpaProxyServerUrl>https://localhost:5002</SpaProxyServerUrl>
     <SpaProxyLaunchCommand>pnpm dev</SpaProxyLaunchCommand>
+    <UserSecretsId>06607a63-e1fc-4cf1-a41c-762bb9b4a8bf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
