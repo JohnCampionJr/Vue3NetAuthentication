@@ -16,6 +16,7 @@
     "date-fns": "^2.23.0",
     "jwt-decode": "^3.1.2",
     "nprogress": "^0.2.0",
+    "pinia": "^2.0.0-rc.9",
     "vee-validate": "^4.4.9",
     "vue": "^3.2.4",
     "vue-global-api": "^0.4.1",

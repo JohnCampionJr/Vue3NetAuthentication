@@ -22,6 +22,7 @@ specifiers:
   eslint: ^7.32.0
   jwt-decode: ^3.1.2
   nprogress: ^0.2.0
+  pinia: ^2.0.0-rc.9
   pnpm: ^6.13.0
   postcss: ^8.3.6
   run-script-os: ^1.1.6
@@ -49,6 +50,7 @@ dependencies:
   date-fns: 2.23.0
   jwt-decode: 3.1.2
   nprogress: 0.2.0
+  pinia: 2.0.0-rc.9_typescript@4.3.5+vue@3.2.4
   vee-validate: 4.4.9_vue@3.2.4
   vue: 3.2.4
   vue-global-api: 0.4.1_vue@3.2.4
@@ -2912,6 +2914,24 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /pinia/2.0.0-rc.9_typescript@4.3.5+vue@3.2.4:
+    resolution: {integrity: sha512-JrFnxKbuyYPEZ6ZS56sBHRzabZj+5xkJj8jxCHGNJ1h2I824QJuLXJVV/3pgkUw0pfXYrRxcO6EiV9+wapSicg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.1.4
+      typescript: ^4.4.2
+      vue: ^2.6.14 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.0.0-beta.15
+      typescript: 4.3.5
+      vue: 3.2.4
+      vue-demi: 0.11.3_vue@3.2.4
+    dev: false
+
   /pkg-dir/2.0.0:
     resolution: {integrity: sha1-9tXREJ4Z1j7fQo4L1X4Sd3YVM0s=}
     engines: {node: '>=4'}
@@ -3926,6 +3946,21 @@ packages:
       vue: 3.2.4
     dev: false
 
+  /vue-demi/0.11.4_vue@3.2.4:
+    resolution: {integrity: sha512-/3xFwzSykLW2HiiLie43a+FFgNOcokbBJ+fzvFXd0r2T8MYohqvphUyDQ8lbAwzQ3Dlcrb1c9ykifGkhSIAk6A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.4
+    dev: false
+
   /vue-eslint-parser/7.10.0_eslint@7.32.0:
     resolution: {integrity: sha512-7tc/ewS9Vq9Bn741pvpg8op2fWJPH3k32aL+jcIcWGCTzh/zXSdh7pZ5FV3W2aJancP9+ftPAv292zY5T5IPCg==}
     engines: {node: '>=8.10'}
@@ -3948,7 +3983,7 @@ packages:
     resolution: {integrity: sha512-283vpYOhVHJCpMkjNVEwZdgaAb+Y93zFaXGAWTI378MLoNuwQydjD/BAy1e81QYEmyA+JbxqcmMZVWcM9rbriw==}
     dependencies:
       eslint-config-vue-global-api: 0.4.1
-      vue-demi: 0.11.3_vue@3.2.4
+      vue-demi: 0.11.4_vue@3.2.4
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
