@@ -41,10 +41,12 @@ const message = ref('')
 const error = ref('')
 const model: IResetPasswordCommand = reactive({} as IResetPasswordCommand)
 
-const rules = {
-  password: passwordRules,
-  confirmPassword: { required, sameAs: sameAs(computed(() => model.password)) }
-}
+const rules = computed(() => {
+  return {
+    password: passwordRules,
+    confirmPassword: { required, sameAs: sameAs(model.password) }
+  }
+})
 
 const $externalResults = ref({})
 

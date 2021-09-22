@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { useVuelidate } from '@vuelidate/core'
-import { email, required, minLength, sameAs } from '@vuelidate/validators'
+import { required, minLength, sameAs } from '@vuelidate/validators'
 import { ref, reactive } from 'vue'
 import { passwordRules } from '../../models'
 
@@ -42,12 +42,13 @@ const message = ref('')
 const error = ref('')
 const model = reactive({ oldPassword: '', password: '', confirmPassword: '' })
 
-const rules = {
-  email: { required, email },
-  oldPassword: { required, minLength: minLength(8) },
-  password: passwordRules,
-  confirmPassword: { required, sameAs: sameAs(computed(() => model.password)) }
-}
+const rules = computed(() => {
+  return {
+    oldPassword: { required, minLength: minLength(8) },
+    password: passwordRules,
+    confirmPassword: { required, sameAs: sameAs(model.password) }
+  }
+})
 
 const $externalResults = ref({})
 

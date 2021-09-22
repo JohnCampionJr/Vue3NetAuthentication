@@ -38,20 +38,13 @@ const message = ref('')
 const error = ref('')
 const model = reactive({ email: '', password: '', confirmPassword: '', returnUrl: '' })
 
-/**
- function rules() {
+const rules = computed(() => {
   return {
     email: { required, email },
     password: passwordRules,
     confirmPassword: { required, sameAs: sameAs(model.password) }
   }
-}
- */
-const rules = {
-  email: { required, email },
-  password: passwordRules,
-  confirmPassword: { required, sameAs: sameAs(computed(() => model.password)) }
-}
+})
 
 const $externalResults = ref({})
 
