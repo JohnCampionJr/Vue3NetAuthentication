@@ -71,9 +71,8 @@ export default defineConfig({
       '@vueuse/core',
       'axios',
       'date-fns',
-      'vee-validate',
-      'yup',
       'jwt-decode',
+      'lodash',
       '@vuelidate/core',
       '@vuelidate/validators'
     ],

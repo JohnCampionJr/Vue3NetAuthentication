@@ -8,77 +8,77 @@
     <div v-if="error" class="alert alert-danger" role="alert">
       {{ error }}
     </div>
-    <Form v-slot="{ errors }" :validation-schema="PersonSchema" @submit="onSubmit">
-      <p>
-        <label>Name: </label>
-        <Field
-          v-model="model.name"
-          name="name"
-          type="text"
-          class="form-control"
-          :class="{ 'is-invalid': errors.name }"
-        />
-        <ErrorMessage class="invalid-feedback" name="name" />
-      </p>
-      <p>
-        <label>Age: </label>
-        <Field
-          v-model="model.age"
-          name="age"
-          type="number"
-          class="form-control"
-          :class="{ 'is-invalid': errors.age }"
-        />
-        <ErrorMessage class="invalid-feedback" name="age" />
-      </p>
-      <p>
-        <label>Email: </label>
-        <Field
-          v-model="model.emailAddress"
-          name="emailAddress"
-          type="email"
-          class="form-control"
-          :class="{ 'is-invalid': errors.emailAddress }"
-        />
-        <ErrorMessage class="invalid-feedback" name="emailAddress" />
-      </p>
+    <div>
+      <VuelidateFullInput :v="v$.name"></VuelidateFullInput>
+    </div>
 
-      <button type="submit" class="mr-1 btn btn-primary">
-        Save
-      </button>
-    </Form>
+    <div>
+      <label>Age: </label>
+      <div>
+        <VuelidateInput type="number" :v="v$.age"></VuelidateInput>
+        <VuelidateMessages :v="v$.age"></VuelidateMessages>
+      </div>
+    </div>
+
+    <div>
+      <label>Email: </label>
+      <div>
+        <VuelidateInput :v="v$.emailAddress"></VuelidateInput>
+        <VuelidateMessages :v="v$.emailAddress"></VuelidateMessages>
+      </div>
+    </div>
+
+    <button class="mr-1 btn btn-primary" @click="onSubmit">
+      Save
+    </button>
   </div>
+  <pre>{{ v$.age }}</pre>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import { Field, Form, ErrorMessage } from 'vee-validate'
-import type { SubmissionContext } from 'vee-validate'
-import { PersonSchema } from '~/models/Person'
+import { useVuelidate } from '@vuelidate/core'
+import { email, between, integer, required } from '@vuelidate/validators'
+
 import type { Person } from '~/models/Person'
 
 const message = ref('')
 const error = ref('')
-const model = reactive({ name: 'Isadora Jarr', age: 39, emailAddress: 'im@nonymous.com' } as Person)
+const model = reactive({ name: 'Isadora Jarr', age: 39, emailAddress: 'im@nymous.com' } as Person)
 
-const onSubmit = async (values: any, actions: SubmissionContext) => {
+const rules = {
+  name: { required },
+  age: { required, integer, between: between(0, 150) },
+  emailAddress: { required, email }
+}
+const $externalResults = ref({})
+
+const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
+
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
+
   try {
-    let response = await axios.post('api/person', model)
+    const response = await axios.post('api/person', model)
     message.value = response.data.successMessage
   }
-  catch (ex) {
+  catch (ex: any) {
     error.value = ex.response.data.errorMessage
 
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
+
+    // actions.setErrors(ex.response.data.validationErrors)
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     x.focus()
   }
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 .is-invalid {
   @apply border-red-300;
 }
