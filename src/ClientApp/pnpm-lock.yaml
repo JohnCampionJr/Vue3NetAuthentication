@@ -40,7 +40,7 @@ specifiers:
   vue-global-api: ^0.4.1
   vue-i18n: ^9.1.7
   vue-router: ^4.0.11
-  vue-tsc: ^0.2.3
+  vue-tsc: ^0.3.0
   vuex: ^4.0.2
   vuex-module-decorators: ^1.0.1
   yup: ^0.32.9
@@ -89,7 +89,7 @@ devDependencies:
   vite-plugin-icons: 0.6.5_d4028e0de01f5386df531d1aa01d5b86
   vite-plugin-pages: 0.15.1_7fe3aad99197253b81205fb92dfdbad3
   vite-plugin-vue-layouts: 0.3.1_vite@2.5.0
-  vue-tsc: 0.2.3_typescript@4.3.5
+  vue-tsc: 0.3.0_typescript@4.3.5
   vuex-module-decorators: 1.0.1_vue@3.2.4+vuex@4.0.2
 
 packages:
@@ -4036,8 +4036,8 @@ packages:
     resolution: {integrity: sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==}
     dev: true
 
-  /vue-tsc/0.2.3_typescript@4.3.5:
-    resolution: {integrity: sha512-0ahxAnQolmv6EOnv5zxeMi4vCpM4PkhjU70i/EI44OzMWq4OErjLZhEh8EXOLtMx6FBRuuqS5fiBXcuqLpoL7Q==}
+  /vue-tsc/0.3.0_typescript@4.3.5:
+    resolution: {integrity: sha512-zaDRZBxwRIz1XjhNP92FqugG71st6BUMnA2EwPeXrAyzbEYVRz6TezNFceYl3QYqqN8CtaxbqUhaQEDj/ntoCA==}
     hasBin: true
     peerDependencies:
       typescript: '*'

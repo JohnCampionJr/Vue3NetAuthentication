@@ -75,7 +75,9 @@ export default defineConfig({
       'date-fns',
       'vee-validate',
       'yup',
-      'jwt-decode'
+      'jwt-decode',
+      '@vuelidate/core',
+      '@vuelidate/validators'
     ],
     exclude: [
       'vue-demi'

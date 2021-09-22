@@ -1,8 +1,12 @@
 ﻿<template>
   <h2>Enable multi-factor authentication (MFA)</h2>
 
-  <TwAlertSuccess v-if="message">{{ message }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="message">
+    {{ message }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 
   <div v-if="model.qrCodeBase64">
     <p>To use an authenticator app go through the following steps:</p>
@@ -12,9 +16,9 @@
           Download a two-factor authenticator app like Microsoft Authenticator for
           <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
           <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or Google Authenticator for
-          <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en"
-            >Android</a
-          >
+          <a
+            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en"
+          >Android</a>
           and
           <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
         </p>
@@ -33,21 +37,15 @@
         </p>
         <div class="row">
           <div class="col-md-6">
-            <Form v-slot="{ errors }" :validation-schema="Schema" @submit="onSubmit">
+            <form @submit.prevent="onSubmit">
               <TwFormGroup label="Verification Code">
-                <Field
-                  v-model="verificationCode"
-                  v-focus
-                  name="verificationCode"
-                  type="text"
-                  class="block w-full mt-1"
-                  :class="{ 'is-invalid': errors.verificationCode }"
-                />
-                <ErrorMessage class="invalid-feedback" name="verificationCode" />
+                <VuelidateInput v-focus :v="v$.verificationCode"></VuelidateInput>
+                <VuelidateMessages :v="v$.verificationCode"></VuelidateMessages>
               </TwFormGroup>
-
-              <button type="submit" class="mt-4 btn">Verify</button>
-            </Form>
+              <button type="submit" class="mt-4 btn">
+                Verify
+              </button>
+            </form>
           </div>
         </div>
       </li>
@@ -56,41 +54,50 @@
 </template>
 
 <script setup lang="ts">
-import { Field, Form, ErrorMessage } from 'vee-validate'
-import { ref, reactive, onBeforeMount } from 'vue'
 import axios from 'axios'
-import * as Yup from 'yup'
+import { ref, reactive, onBeforeMount } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, maxLength } from '@vuelidate/validators'
 import type { IMfaEnableResult } from '../../../models'
 
 const message = ref('')
 const error = ref('')
 const model = reactive({} as IMfaEnableResult)
-const verificationCode = ref('')
+const codeModel = reactive({ verificationCode: '' })
 
-onBeforeMount(async () => {
+const rules = {
+  verificationCode: { required, min: minLength(6), max: maxLength(7) }
+}
+
+const $externalResults = ref({})
+
+const v$ = useVuelidate(rules, codeModel, { $externalResults, $autoDirty: true })
+
+onBeforeMount(async() => {
   try {
     const response = await axios.get<IMfaEnableResult>('/api/account/manage/mfaenable')
     Object.assign(model, response.data)
-  } catch (ex) {
+  }
+  catch (ex: any) {
     error.value = ex.message
   }
 })
 
-const Schema = Yup.object().shape({
-  verificationCode: Yup.string().label('Verification Code').required().min(6).max(7)
-})
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
 
-const onSubmit = async (values: any, actions: any) => {
   message.value = ''
   error.value = ''
   try {
     const response = await axios.post('/api/account/manage/mfaenable', {
-      verificationCode: verificationCode.value
+      verificationCode: codeModel.verificationCode
     })
     message.value = response.data.message
-  } catch (ex) {
+  }
+  catch (ex: any) {
     error.value = ex.response.data.message
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }

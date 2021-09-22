@@ -56,10 +56,12 @@ const $externalResults = ref({})
 const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
 
 const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
-  const isFormCorrect = await v$.value.$validate()
-  if (!isFormCorrect) return
+
   try {
     const response = await axios.post('api/person', model)
     message.value = response.data.successMessage

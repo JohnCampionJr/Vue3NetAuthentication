@@ -76,10 +76,11 @@ onMounted(() => {
 })
 
 const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
-  const isFormCorrect = await v$.value.$validate()
-  if (!isFormCorrect) return
 
   try {
     const response = await axios.post<ILoginResult>('/api/account/login', model)

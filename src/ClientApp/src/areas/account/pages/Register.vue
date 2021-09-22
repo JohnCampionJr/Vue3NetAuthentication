@@ -25,11 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import { useVuelidate } from '@vuelidate/core'
-import { email, required, minLength, sameAs, helpers } from '@vuelidate/validators'
 import axios from 'axios'
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, sameAs } from '@vuelidate/validators'
+import { passwordRules } from '../models'
 
 const router = useRouter()
 const route = useRoute()
@@ -37,23 +38,32 @@ const message = ref('')
 const error = ref('')
 const model = reactive({ email: '', password: '', confirmPassword: '', returnUrl: '' })
 
-const matchPassword = helpers.withMessage('Password must contain one uppercase, one number and one special case character', helpers.regex(/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/))
-
+/**
+ function rules() {
+  return {
+    email: { required, email },
+    password: passwordRules,
+    confirmPassword: { required, sameAs: sameAs(model.password) }
+  }
+}
+ */
 const rules = {
   email: { required, email },
-  password: { required, minLength: minLength(8), matchPassword },
+  password: passwordRules,
   confirmPassword: { required, sameAs: sameAs(computed(() => model.password)) }
 }
+
 const $externalResults = ref({})
 
 const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
 
 const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
   model.returnUrl = route.query.returnUrl as string
-  const isFormCorrect = await v$.value.$validate()
-  if (!isFormCorrect) return
 
   try {
     await axios.post('/api/account/register', model)

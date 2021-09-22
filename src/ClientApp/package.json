@@ -53,7 +53,7 @@
     "vite-plugin-icons": "^0.6.5",
     "vite-plugin-pages": "^0.15.1",
     "vite-plugin-vue-layouts": "^0.3.1",
-    "vue-tsc": "^0.2.3",
+    "vue-tsc": "^0.3.0",
     "vuex-module-decorators": "^1.0.1"
   }
 }

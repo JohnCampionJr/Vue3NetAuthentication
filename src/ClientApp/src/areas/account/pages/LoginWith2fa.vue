@@ -3,22 +3,19 @@
 
   <p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
 
-  <TwAlertSuccess v-if="message">{{ message }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="message">
+    {{ message }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 
   <TwCard title="Please enter your details" class="max-w-lg mt-8">
     <div class="grid grid-cols-1 gap-6">
-      <Form v-slot="{ errors }" :validation-schema="Schema" @submit="onSubmit">
+      <form @submit.prevent="onSubmit">
         <TwFormGroup label="Verification Code">
-          <Field
-            v-model="model.twoFactorCode"
-            v-focus
-            name="twoFactorCode"
-            type="text"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.twoFactorCode }"
-          />
-          <ErrorMessage class="invalid-feedback" name="twoFactorCode" />
+          <VuelidateInput v-focus :v="v$.twoFactorCode"></VuelidateInput>
+          <VuelidateMessages :v="v$.twoFactorCode"></VuelidateMessages>
         </TwFormGroup>
         <div class="block">
           <div class="mt-2">
@@ -31,24 +28,28 @@
           </div>
         </div>
 
-        <button type="submit" class="mt-4 btn">Submit</button>
-      </Form>
+        <button type="submit" class="mt-4 btn">
+          Submit
+        </button>
+      </form>
     </div>
   </TwCard>
   <p>
     Don't have access to your authenticator device? You can
-    <router-link :to="{ path: '/account/LoginWithRecoveryCode', query: { returnUrl: returnUrl } }"
-      >log in with a recovery code</router-link
-    >.
+    <router-link
+      :to="{ path: '/account/LoginWithRecoveryCode', query: { returnUrl: returnUrl } }"
+    >
+      log in with a recovery code
+    </router-link>.
   </p>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import * as Yup from 'yup'
 import { ref, reactive, onBeforeMount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Field, Form, ErrorMessage } from 'vee-validate'
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength, maxLength } from '@vuelidate/validators'
 import type { ILoginResult } from '../models'
 import authStore from '~/store/authStore'
 
@@ -59,20 +60,28 @@ const error = ref('')
 const returnUrl = ref('')
 const model = reactive({ twoFactorCode: '', rememberMachine: false })
 
-onBeforeMount(async () => {
+const rules = {
+  twoFactorCode: { required, min: minLength(6), max: maxLength(7) }
+}
+
+const $externalResults = ref({})
+
+const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
+
+onBeforeMount(async() => {
   returnUrl.value = route.query.returnUrl as string
   try {
     await axios.post('/api/account/checkmfa', {})
-  } catch (ex) {
+  }
+  catch (ex) {
     router.push({ path: '/account/login', query: { returnUrl: returnUrl.value } })
   }
 })
 
-const Schema = Yup.object().shape({
-  twoFactorCode: Yup.string().label('Two Factor Code').required().min(6).max(7)
-})
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
 
-const onSubmit = async (values: any, actions: any) => {
   message.value = ''
   error.value = ''
   try {
@@ -84,9 +93,10 @@ const onSubmit = async (values: any, actions: any) => {
       if (returnUrl.value) router.push(returnUrl.value)
       else router.push('/')
     }
-  } catch (ex) {
+  }
+  catch (ex: any) {
     error.value = ex.response.data.message
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }

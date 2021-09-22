@@ -9,43 +9,28 @@
 
   <TwCard class="max-w-lg mt-8">
     <div class="grid grid-cols-1 gap-6">
-      <Form v-slot="{ errors }" :validation-schema="Schema" @submit="onSubmit">
+      <form @submit.prevent="onSubmit">
         <TwFormGroup label="User Name">
-          <Field
-            v-model="model.email"
-            name="email"
-            type="text"
-            class="block w-full mt-1 bg-gray-200 border-gray-300"
-            :class="{ 'is-invalid': errors.email }"
-            disabled
-          />
-          <ErrorMessage class="invalid-feedback" name="email" />
+          <VuelidateInput :v="v$.email" class="block w-full mt-1 bg-gray-200 border-gray-300"></VuelidateInput>
         </TwFormGroup>
         <TwFormGroup label="Phone Number">
-          <Field
-            v-model="model.phoneNumber"
-            name="phoneNumber"
-            type="text"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.phoneNumber }"
-          />
-          <ErrorMessage class="invalid-feedback" name="phoneNumber" />
+          <VuelidateInput v-focus :v="v$.phoneNumber"></VuelidateInput>
+          <VuelidateMessages :v="v$.phoneNumber"></VuelidateMessages>
         </TwFormGroup>
         <button type="submit" class="mt-4 btn">
           Save
         </button>
-      </Form>
+      </form>
     </div>
   </TwCard>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import * as Yup from 'yup'
-import { Field, Form, ErrorMessage } from 'vee-validate'
-import type { SubmissionContext } from 'vee-validate'
 import { ref, reactive, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required } from '@vuelidate/validators'
 import type { IUserProfileCommand } from '../../models'
 
 const router = useRouter()
@@ -53,9 +38,13 @@ const message = ref('')
 const error = ref('')
 const model = reactive({} as IUserProfileCommand)
 
-const Schema = Yup.object().shape({
-  email: Yup.string().label('Email').required().email()
-})
+const rules = {
+  email: { required, email },
+  phoneNumber: {}
+}
+const $externalResults = ref({})
+
+const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
 
 onBeforeMount(async() => {
   try {
@@ -67,16 +56,19 @@ onBeforeMount(async() => {
   }
 })
 
-const onSubmit = async(values: any, actions: SubmissionContext) => {
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
   try {
-    const response = await axios.post('/api/account/manage/userprofile', model)
+    await axios.post('/api/account/manage/userprofile', model)
     message.value = 'profile updated'
   }
-  catch (ex) {
+  catch (ex: any) {
     error.value = ex.response.data.message
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }

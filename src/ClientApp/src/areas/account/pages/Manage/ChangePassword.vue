@@ -1,74 +1,71 @@
 ﻿<template>
   <h2>Change Password</h2>
-  <TwAlertSuccess v-if="message">{{ message }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="message">
+    {{ message }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 
   <TwCard class="max-w-lg mt-8">
     <div class="grid grid-cols-1 gap-6">
-      <Form v-slot="{ errors }" :validation-schema="Schema" @submit="onSubmit">
+      <form @submit.prevent="onSubmit">
         <TwFormGroup label="Old Password">
-          <Field
-            v-model="model.oldPassword"
-            v-focus
-            name="oldPassword"
-            type="password"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.oldPassword }"
-          />
-          <ErrorMessage class="invalid-feedback" name="oldPassword" />
+          <VuelidateInput type="password" :v="v$.oldPassword"></VuelidateInput>
+          <VuelidateMessages :v="v$.oldPassword"></VuelidateMessages>
         </TwFormGroup>
         <TwFormGroup label="Password">
-          <Field
-            v-model="model.password"
-            name="password"
-            type="password"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.password }"
-          />
-          <ErrorMessage class="invalid-feedback" name="password" />
+          <VuelidateInput type="password" :v="v$.password"></VuelidateInput>
+          <VuelidateMessages :v="v$.password"></VuelidateMessages>
         </TwFormGroup>
         <TwFormGroup label="Confirm Password">
-          <Field
-            v-model="model.confirmPassword"
-            name="confirmPassword"
-            type="password"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.confirmPassword }"
-          />
-          <ErrorMessage class="invalid-feedback" name="confirmPassword" />
+          <VuelidateInput type="password" :v="v$.confirmPassword"></VuelidateInput>
+          <VuelidateMessages :v="v$.confirmPassword"></VuelidateMessages>
         </TwFormGroup>
 
-        <button type="submit" class="mt-4 btn">Update Password</button>
-      </Form>
+        <button type="submit" class="mt-4 btn">
+          Update Password
+        </button>
+      </form>
     </div>
   </TwCard>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import * as Yup from 'yup'
-import { Field, Form, ErrorMessage } from 'vee-validate'
-import type { SubmissionContext } from 'vee-validate'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, minLength, sameAs } from '@vuelidate/validators'
 import { ref, reactive } from 'vue'
-import { PasswordSchema } from '../../models'
+import { passwordRules } from '../../models'
 
 const message = ref('')
 const error = ref('')
 const model = reactive({ oldPassword: '', password: '', confirmPassword: '' })
 
-const Schema = PasswordSchema.shape({
-  oldPassword: Yup.string().label('Old Password').required().min(8)
-})
+const rules = {
+  email: { required, email },
+  oldPassword: { required, minLength: minLength(8) },
+  password: passwordRules,
+  confirmPassword: { required, sameAs: sameAs(computed(() => model.password)) }
+}
 
-const onSubmit = async (values: any, actions: SubmissionContext) => {
+const $externalResults = ref({})
+
+const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
+
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
   try {
     const response = await axios.post('/api/account/manage/changepassword', model)
     message.value = response.data.message
-  } catch (ex) {
+  }
+  catch (ex: any) {
     error.value = ex.response.data.message
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }

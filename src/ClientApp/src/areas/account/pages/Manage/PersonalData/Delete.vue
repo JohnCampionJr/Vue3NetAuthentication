@@ -1,7 +1,11 @@
 ﻿<template>
   <h2>Delete Personal Data</h2>
-  <TwAlertSuccess v-if="message">{{ message }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="message">
+    {{ message }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 
   <div class="alert alert-warning" role="alert">
     <p>
@@ -11,50 +15,51 @@
 
   <div class="row">
     <div class="col-md-6">
-      <Form v-slot="{ errors }" :validation-schema="Schema" @submit="onSubmit">
+      <form @submit.prevent="onSubmit">
         <TwFormGroup label="Password">
-          <Field
-            v-model="model.password"
-            v-focus
-            name="password"
-            type="password"
-            class="block w-full mt-1"
-            :class="{ 'is-invalid': errors.password }"
-          />
-          <ErrorMessage class="invalid-feedback" name="password" />
+          <VuelidateInput v-focus type="password" :v="v$.password"></VuelidateInput>
+          <VuelidateMessages :v="v$.password"></VuelidateMessages>
         </TwFormGroup>
-        <button class="mt-4 bg-red-400 btn" type="submit">Delete data and close my account</button>
-      </Form>
+        <button class="mt-4 bg-red-400 btn" type="submit">
+          Delete data and close my account
+        </button>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import * as Yup from 'yup'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { Field, Form, ErrorMessage } from 'vee-validate'
-import type { SubmissionContext } from 'vee-validate'
+import { useVuelidate } from '@vuelidate/core'
+import { required, minLength } from '@vuelidate/validators'
 
 const router = useRouter()
 const message = ref('')
 const error = ref('')
 const model = reactive({ password: '' })
 
-const Schema = Yup.object().shape({
-  password: Yup.string().label('Password').required().min(8)
-})
+const rules = {
+  password: { required, minLength: minLength(8) }
+}
+const $externalResults = ref({})
 
-const onSubmit = async (values: any, actions: SubmissionContext) => {
+const v$ = useVuelidate(rules, model, { $externalResults, $autoDirty: true })
+
+const onSubmit = async() => {
+  const isFormValid = await v$.value.$validate()
+  if (!isFormValid) return
+
   message.value = ''
   error.value = ''
   try {
     await axios.post('/api/account/manage/deletepersonaldata', model)
     router.push('/account/logout')
-  } catch (ex) {
+  }
+  catch (ex: any) {
     error.value = ex.response.message
-    actions.setErrors(ex.response.data.validationErrors)
+    $externalResults.value = ex.response.data.validationErrors
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
     if (x) x.focus()
   }
