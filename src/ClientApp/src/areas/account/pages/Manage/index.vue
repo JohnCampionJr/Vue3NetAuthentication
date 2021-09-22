@@ -1,7 +1,11 @@
 ﻿<template>
   <h2>Profile</h2>
-  <TwAlertSuccess v-if="message">{{ message }}</TwAlertSuccess>
-  <TwAlertDanger v-if="error">{{ error }}</TwAlertDanger>
+  <TwAlertSuccess v-if="message">
+    {{ message }}
+  </TwAlertSuccess>
+  <TwAlertDanger v-if="error">
+    {{ error }}
+  </TwAlertDanger>
 
   <TwCard class="max-w-lg mt-8">
     <div class="grid grid-cols-1 gap-6">
@@ -27,7 +31,9 @@
           />
           <ErrorMessage class="invalid-feedback" name="phoneNumber" />
         </TwFormGroup>
-        <button type="submit" class="mt-4 btn">Save</button>
+        <button type="submit" class="mt-4 btn">
+          Save
+        </button>
       </Form>
     </div>
   </TwCard>
@@ -51,22 +57,24 @@ const Schema = Yup.object().shape({
   email: Yup.string().label('Email').required().email()
 })
 
-onBeforeMount(async () => {
+onBeforeMount(async() => {
   try {
     const response = await axios.get<IUserProfileCommand>('/api/account/manage/userprofile')
     Object.assign(model, response.data)
-  } catch (ex) {
+  }
+  catch (ex) {
     router.push('/account/login')
   }
 })
 
-const onSubmit = async (values: any, actions: SubmissionContext) => {
+const onSubmit = async(values: any, actions: SubmissionContext) => {
   message.value = ''
   error.value = ''
   try {
     const response = await axios.post('/api/account/manage/userprofile', model)
-    message.value = response.data.message
-  } catch (ex) {
+    message.value = 'profile updated'
+  }
+  catch (ex) {
     error.value = ex.response.data.message
     actions.setErrors(ex.response.data.validationErrors)
     const x = document.getElementsByName(Object.keys(ex.response.data.validationErrors)[0])[0]
